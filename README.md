@@ -191,7 +191,7 @@ if __name__ == '__main__':
 </body>
 </html>
 ```
-You can modify the [`admin.html`] page and [`client.html`] page and [`app.py`] server as per your requirements
+You can modify the [`admin.html`](#admin-page ) page and [`client.html`](#client-page) page and [`app.py`](#setup-your-server) server as per your requirements
 # Know more about the modules 
 - [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 - [Socket.io](https://flask-socketio.readthedocs.io/en/latest/getting_started.html)
