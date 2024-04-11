@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Admin Page</h1>
+        <div class="form-group">
+            <label for="message">Message:</label>
+            <input type="text" class="form-control" id="message">
+        </div>
+        <button class="btn btn-primary mb-3" onclick="sendMessageToAll()">Send Message to All</button>
+        
+        <!-- Container to display connected clients -->
+        <div class="card">
+            <div class="card-header">Connected Clients</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>IP Address</th>
+                        <th>Status</th>
+                        <th>Connected Time</th>
+                        <th>Disconnected Time</th>
+                        <th>Device Name</th>
+                        <!-- Add other necessary columns here -->
+                    </tr>
+                </thead>
+                <tbody id="clientList">
+                    <!-- Client information will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    
+        <!-- Form to send message to a specific client -->
+        <div class="mt-3">
+            <label for="specificMessage">Send Message to Specific Client:</label>
+            <input type="text" class="form-control" id="specificMessage">
+            <select class="form-control mt-2" id="clientSelect">
+                <!-- Client options will be added here dynamically -->
+            </select>
+            <button class="btn btn-success mt-2" onclick="sendMessageToSpecific()">Send Message</button>
+        </div>
+    </div>    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+    
+        function sendMessageToAll() {
+            var message = $('#message').val();
+            socket.emit('send_message', {message: message});
+        }
+    
+        function sendMessageToSpecific() {
+            var message = $('#specificMessage').val();
+            var clientId = $('#clientSelect').val();
+            socket.emit('send_message_to_specific', {message: message, clientId: clientId});
+        }
+    
+        // Update client list when a client connects or disconnects
+        socket.on('update_client_list', function(data) {
+            $('#clientList').empty();
+            data.clients.forEach(function(client) {
+                $('#clientList').append('<tr>' +
+                    '<td>' + client.ip + '</td>' +
+                    '<td>' + client.status + '</td>' +
+                    '<td>' + client.connected_time + '</td>' +
+                    '<td>' + (client.disconnected_time ? client.disconnected_time : '') + '</td>' +
+                    '<td>' + client.device_name + '</td>' +
+                    // Add other necessary columns here
+                    '</tr>');
+            });
+    
+            // Update client options for sending specific message
+            $('#clientSelect').empty();
+            data.clients.forEach(function(client) {
+                $('#clientSelect').append('<option value="' + client.id + '">' + client.ip + '</option>');
+            });
+        });
+    </script>    
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Client</title>
+    <script src="https://cdn.socket.io/4.2.0/socket.io.min.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:5000');
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('message', function(msg) {
+            alert('Received message: ' + msg);
+        });
+    </script>
+</head>
+<body>
+    <h1>Socket.IO Client</h1>
+</body>
+</html>
