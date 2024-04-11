@@ -61,4 +61,4 @@ def handle_send_message_to_specific(data):
         emit('receive_message', {'message': message}, room=client['id'])
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='192.168.31.151')
+    socketio.run(app, debug=True, host='0.0.0.0')
